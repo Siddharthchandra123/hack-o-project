@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhance - Modern Landing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, #3B82F6, #A855F7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white antialiased">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <header class="py-6 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-wider">ENHANCE</div>
+            <nav class="hidden md:flex items-center space-x-8">
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">About</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">Features</a>
+                <a href="#" class="text-gray-400 hover:text-white transition-colors">Pricing</a>
+            </nav>
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-5 rounded-lg transition-colors">
+                Sign Up
+            </button>
+        </header>
+
+        <!-- Hero Section -->
+        <main class="py-16 md:py-24">
+            <section class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center md:text-left">
+                    <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-4">
+                        The best way <br class="hidden md:inline"> to <span class="gradient-text">enhance</span>
+                    </h1>
+                    <p class="text-gray-400 text-lg mb-8 max-w-md mx-auto md:mx-0">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.
+                    </p>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                            Get Started
+                        </button>
+                        <button class="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <!-- Placeholder for 3D graphic -->
+                    <img src="https://placehold.co/600x500/111827/transparent?text=3D+Graphic" alt="3D Enhancement Blocks" class="w-full h-auto rounded-lg">
+                </div>
+            </section>
+             <!-- Logo cloud -->
+            <div class="mt-20 text-center">
+                <p class="text-gray-500 mb-6">Trusted by world-class companies</p>
+                <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-4">
+                    <span class="font-semibold text-gray-400">Logo</span>
+                    <span class="font-semibold text-gray-400">Logo</span>
+                    <span class="font-semibold text-gray-400">Logo</span>
+                    <span class="font-semibold text-gray-400">Logo</span>
+                    <span class="font-semibold text-gray-400">Logo</span>
+                </div>
+            </div>
+        </main>
+
+        <!-- Feature Section 1 -->
+        <section class="py-16 md:py-24">
+            <div class="bg-gray-800 p-8 md:p-12 rounded-2xl grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-4">Introducing good interface to learn</h2>
+                    <p class="text-gray-400 mb-6">
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    </p>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Learn More
+                    </button>
+                </div>
+                 <div>
+                    <!-- Placeholder for 3D graphic -->
+                    <img src="https://placehold.co/500x400/27272a/transparent?text=3D+Graphic" alt="Interface Learning Blocks" class="w-full h-auto rounded-lg">
+                </div>
+            </div>
+        </section>
+
+        <!-- Feature Section 2 (Split) -->
+        <section class="py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+            <div>
+                <!-- Placeholder for 3D graphic -->
+                <img src="https://placehold.co/500x400/111827/transparent?text=3D+Graphic" alt="Work Tools Blocks" class="w-full h-auto rounded-lg">
+            </div>
+            <div class="text-center md:text-left">
+                <h2 class="text-4xl font-bold mb-4">All your work to make a tool</h2>
+                <p class="text-gray-400 mb-6">
+                   Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                </p>
+                <button class="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                    Explore
+                </button>
+            </div>
+        </section>
+
+        <!-- Feature Section 3 (Split) -->
+        <section class="py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
+             <div class="text-center md:text-left">
+                <div class="inline-block bg-purple-600/10 text-purple-400 text-sm font-semibold py-1 px-3 rounded-full mb-3">
+                    Collaboration
+                </div>
+                <h2 class="text-4xl font-bold mb-4">Good working in a good team</h2>
+                <p class="text-gray-400 mb-6">
+                   Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                </p>
+                <button class="bg-gray-800 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                    Team up
+                </button>
+            </div>
+            <div>
+                <!-- Placeholder for 3D graphic -->
+                <img src="https://placehold.co/500x400/111827/transparent?text=3D+Graphic" alt="Teamwork Blocks" class="w-full h-auto rounded-lg">
+            </div>
+        </section>
+
+
+        <!-- How to Join Section -->
+        <section class="py-16 md:py-24">
+             <div class="bg-white text-gray-900 p-8 md:p-12 rounded-2xl grid md:grid-cols-2 gap-12 items-center">
+                 <div>
+                    <!-- Placeholder for 3D graphic -->
+                    <img src="https://placehold.co/500x400/ffffff/transparent?text=3D+Graphic" alt="Community Blocks" class="w-full h-auto rounded-lg">
+                </div>
+                <div>
+                    <h2 class="text-4xl font-bold mb-6">How to join our community</h2>
+                     <div class="space-y-6">
+                        <div>
+                            <h3 class="font-bold text-lg mb-1">Step 1</h3>
+                            <p class="text-gray-600">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                        </div>
+                         <div>
+                            <h3 class="font-bold text-lg mb-1">Step 2</h3>
+                            <p class="text-gray-600">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                        </div>
+                         <div>
+                            <h3 class="font-bold text-lg mb-1">Step 3</h3>
+                            <p class="text-gray-600">Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                        </div>
+                    </div>
+                    <button class="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Join Community
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-16 md:py-24 text-center">
+            <h2 class="text-4xl font-bold mb-4">Testimonials</h2>
+            <p class="text-gray-400 mb-12 max-w-2xl mx-auto">See what our amazing users are saying about our platform. We take pride in our community and the feedback we receive.</p>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-gray-800 p-6 rounded-lg text-left">
+                    <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400"> <!-- Stars -->
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"This is the best platform I've ever used. It's intuitive, powerful, and has saved me countless hours of work."</p>
+                    <div class="font-semibold">- Alex Johnson</div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg text-left">
+                     <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400"> <!-- Stars -->
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"The community is fantastic and the features are top-notch. I highly recommend this to anyone in the field."</p>
+                    <div class="font-semibold">- Sarah Lee</div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-lg text-left">
+                     <div class="flex items-center mb-4">
+                        <div class="flex text-yellow-400"> <!-- Stars -->
+                            <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-300 mb-4">"A game-changer for our team's productivity. The collaboration tools are simply outstanding and easy to use."</p>
+                    <div class="font-semibold">- Michael Chen</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section class="py-16 md:py-24">
+             <div class="bg-gray-800 p-8 md:p-12 rounded-2xl grid md:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h2 class="text-4xl font-bold mb-4">Get started with learnx today</h2>
+                    <p class="text-gray-400 mb-6">
+                       Sign up now and start your journey to enhance your skills and collaborate with a vibrant community.
+                    </p>
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors">
+                        Create an account
+                    </button>
+                </div>
+                 <div>
+                    <!-- Placeholder for 3D graphic -->
+                    <img src="https://placehold.co/500x400/27272a/transparent?text=3D+Graphic" alt="Get Started Blocks" class="w-full h-auto rounded-lg">
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="py-12 border-t border-gray-800 grid md:grid-cols-4 gap-8">
+            <div>
+                <div class="text-xl font-bold tracking-wider mb-2">ENHANCE</div>
+                <p class="text-gray-400 text-sm">A new way to learn and enhance your skills.</p>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">Product</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">Features</a></li>
+                    <li><a href="#" class="hover:text-white">Pricing</a></li>
+                    <li><a href="#" class="hover:text-white">Updates</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="font-semibold mb-3">Company</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">About Us</a></li>
+                    <li><a href="#" class="hover:text-white">Careers</a></li>
+                    <li><a href="#" class="hover:text-white">Contact</a></li>
+                </ul>
+            </div>
+             <div>
+                <h4 class="font-semibold mb-3">Support</h4>
+                <ul class="space-y-2 text-gray-400">
+                    <li><a href="#" class="hover:text-white">Help Center</a></li>
+                    <li><a href="#" class="hover:text-white">Terms of Service</a></li>
+                    <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                </ul>
+            </div>
+        </footer>
+
+    </div>
+
+</body>
+</html>
