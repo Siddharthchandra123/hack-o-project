@@ -1,0 +1,7 @@
+body{
+    background-color: #1a202c; /* Tailwind's gray-900 */
+    color: #ffffff; /* White text */
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
