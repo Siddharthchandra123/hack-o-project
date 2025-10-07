@@ -3,14 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
+    <title>Enhance - Modern Landing Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="login_Page.css">
     <link rel="stylesheet" href="P1.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .gradient-text {
+            background: linear-gradient(90deg, #3B82F6, #A855F7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
 </head>
+
 <body>
-    
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <header class="py-6 flex justify-between items-center">
+            <div class="text-xl font-bold tracking-wider">
+                <button onclick="location.href='login_Page.html'"
+                    class="bg-transparent border-0 text-xl font-bold tracking-wider">LearnX</button>
+            </div>    
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">About</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Features</a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">Pricing</a>
+                </nav>
+                
+            
+        </header>
+    </div>
+
+    <div class="google-button-joined-to-api bg-gray-700 p-1 rounded inline-block" style="width:250px; height:40px">
+        <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID" data-context="signup" data-ux_mode="popup"
+            data-callback="handleCredentialResponse" data-size="Medium" data-theme="filled_black">
+        </div>
+        
+        <div class="g_id_signin" data-type="standard" data-shape="square" data-theme="outline" data-text="signup_with"
+            data-size="large">
+        </div>
+        
+        <button onclick="signInWithMicrosoft()" class="flex items-center space-x-2 bg-gray-300 text-black px-4 py-2 rounded hover:bg-gray-400">
+        <!-- Microsoft Logo SVG -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <rect x="2" y="2" width="9" height="9" fill="#F25022"/>
+            <rect x="13" y="2" width="9" height="9" fill="#7FBA00"/>
+            <rect x="2" y="13" width="9" height="9" fill="#00A4EF"/>
+            <rect x="13" y="13" width="9" height="9" fill="#FFB900"/>
+        </svg>
+        <span>Sign in with Microsoft</span>
+        </button>
+
+        <script>
+            function signInWithMicrosoft() {
+                const clientId = "YOUR_CLIENT_ID";
+                const tenant = "common"; // or your tenant ID
+                const redirectUri = "http://localhost:3000/auth/callback";
+                const scope = "openid profile email";
+
+                const authUrl = `https://login.microsoftonline.com/${tenant}/oauth2/v2.0/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}`;
+
+                window.location.href = authUrl;
+            }
+        </script>
+
+        <script>
+            const hash = window.location.hash;
+            const token = new URLSearchParams(hash.substring(1)).get('access_token');
+            console.log("Microsoft Access Token:", token);
+            // You can now use this token to fetch user info or log them in
+        </script>
+
+    </div>
 </body>
+<script>
+    function handleCredentialResponse(response) {
+        const jwt = response.credential;
+        console.log("Google JWT:", jwt);
+        // You can send this JWT to your backend for verification or use it to log the user in
+    }
+</script>
+
+
 </html>
