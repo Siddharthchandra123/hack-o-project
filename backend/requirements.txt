@@ -1,0 +1,27 @@
+# Core ML
+numpy
+pandas
+scikit-learn
+Pillow
+torch==2.1.2
+torchvision==0.16.2
+
+# Backend
+flask
+flask-cors
+gunicorn
+requests
+python-dotenv
+authlib
+
+# Weather & Location
+geopy
+timezonefinder
+
+# Database
+mysql-connector-python
+sqlalchemy
+
+# Utilities
+tqdm
+

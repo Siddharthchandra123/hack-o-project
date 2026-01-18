@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Agro AI — Smart Farming</title>
+
+  <!-- AOS Animation Library -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+<style>
+body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #1b6c4c;
+      color: #333;
+    }
+.hero {
+  text-align: center;
+  padding: 120px 20px;
+  color: white;
+  backdrop-filter: blur(6px);
+}
+.hero h1 {
+  font-size: 3.4rem;
+  font-weight: 700;
+}
+.hero p {
+  font-size: 1.25rem;
+  max-width: 700px;
+  margin: 0 auto 30px;
+}
+
+    .btn {
+  padding: 14px 32px;
+  font-size: 16px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+}
+.btn-primary:hover {
+  background: #66bb6a;
+  transform: translateY(-3px);
+}
+.btn-secondary:hover {
+  background: #2e7d32;
+  color: white;
+}
+
+
+    section { padding: 60px 20px; }
+    .features { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 20px; }
+.feature-box {
+  background: rgba(255,255,255,0.92);
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  transition: all 0.35s ease;
+}
+.feature-box:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(
+    rgba(0,0,0,0.55),
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.7)
+  );
+  z-index: -1;
+}
+
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+.scroll-down {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  animation: bounce 1.8s infinite;
+}
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+.navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  z-index: 10;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 25px;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap; /* 🔥 prevents text cutting */
+}
+
+/* LOGIN BUTTON */
+.login-btn {
+  background: #4caf50;
+  padding: 8px 18px;
+  border-radius: 20px;
+  font-weight: 600;
+}
+
+.login-btn:hover {
+  background: #66bb6a;
+}
+
+.logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+.nav-links li {
+  flex-shrink: 0;   /* ⛔ STOP SHRINKING */
+}
+
+.login-btn {
+  display: inline-block;
+  min-width: 80px; /* ⛔ FORCE FULL WIDTH */
+  text-align: center;
+}
+.navbar {
+  overflow: visible;
+}
+
+.nav-links {
+  overflow: visible;
+}
+
+
+  </style>
+</head>
+<body>
+<nav class="navbar">
+  <div class="logo" style="color: white;">🌾 Agro AI</div>
+
+  <ul class="nav-links">
+    <li><a href="/index">Home</a></li>
+    <li><a href="/fertilizer">Features</a></li>
+    <li><a href="#">Demo</a></li>
+    <li><a href="/login" class="login-btn">Login</a></li>
+  </ul>
+</nav>
+
+
+
+  <!-- Hero Section -->
+  <div class="hero">
+    <h1 data-aos="fade-down">Agro AI — Smarter Farming with AI</h1>
+    <p data-aos="fade-up">AI predictions, crop health insights, weather & soil intelligence — all in a modern tool for farmers.</p>
+    <button class="btn btn-primary" data-aos="zoom-in">Get Started</button>
+    <button class="btn btn-secondary" data-aos="zoom-in">See Demo</button>
+  </div>
+<div class="scroll-down">⬇ Scroll</div>
+
+  <!-- Features Section -->
+  <section>
+    <h2 data-aos="fade-right" style="color:white">📊 Key Features</h2>
+    <div class="features">
+      <div class="feature-box" data-aos="fade-up">
+        <h3>AI Crop Insights</h3>
+        <p>Detect issues & opportunities with AI analysis.</p>
+        <a href="/Crop_Disease" style="color:blue">Learn More →</a>
+      </div>
+      <div class="feature-box" data-aos="fade-up" data-aos-delay="100">
+        <h3>Soil & Weather Data</h3>
+        <p>Get real-time weather and soil health insights.</p>
+        <a href="/fertilizer" style="color:blue">Learn More →</a>
+      </div>
+      <div class="feature-box" data-aos="fade-up" data-aos-delay="200">
+        <h3>Market Price Alerts</h3>
+        <p>Live mandi price updates.</p>
+        <a href="/mandi" style="color:blue">Learn More →</a>
+      </div>
+      <div class="feature-box" data-aos="fade-up" data-aos-delay="300">
+        <h3>Smart Notices</h3>
+        <p>Instant alerts for diseases & climate threats.</p>
+        <a href="/login" style="color:blue">Learn More →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer CTA -->
+  <section style="text-align:center;background:#0c601f; opacity: 50%; color:white;">
+    <h2 data-aos="fade-left">Ready to Grow Smarter?</h2>
+    <button class="btn btn-primary" data-aos="flip-up">Start for Free</button>
+  </section>
+
+  <!-- AOS Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+  <script>
+    AOS.init({ duration: 1000, once: true });
+  </script>
+</body>
+</html>

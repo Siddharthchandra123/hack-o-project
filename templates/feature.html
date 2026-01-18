@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agro AI | Features</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700;800&display=swap" rel="stylesheet">
+
+  <!-- AOS Animation -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #72907f;
+      color: #222;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: #ffffffcc;
+      backdrop-filter: blur(10px);
+      display: flex;
+      justify-content: space-between;
+      padding: 15px 40px;
+      z-index: 10;
+    }
+    .navbar a {
+      text-decoration: none;
+      margin-left: 25px;
+      font-weight: 500;
+      color: #2e7d32;
+    }
+    .logo {
+      font-weight: 800;
+      font-size: 1.2rem;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      color: white;
+      padding: 40px;
+    }
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 800;
+    }
+    .hero p {
+      max-width: 700px;
+      font-size: 1.3rem;
+      opacity: 0.95;
+    }
+
+    /* ===== PIPELINE ===== */
+    .pipeline {
+      padding: 100px 10%;
+    }
+    .pipeline-step {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin: 60px 0;
+    }
+    .pipeline-step span {
+      font-size: 3rem;
+    }
+    .pipeline-step h3 {
+      color: #2e7d32;
+      font-size: 1.8rem;
+    }
+
+    /* ===== FEATURES GRID ===== */
+    .features {
+      background: #e9f6ef;
+      padding: 100px 8%;
+    }
+    .features h2 {
+      text-align: center;
+      font-size: 2.5rem;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 30px;
+      margin-top: 50px;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+      text-align: center;
+      transition: transform 0.4s ease;
+    }
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+    }
+
+    /* ===== STACK ===== */
+    .stack {
+      padding: 100px 10%;
+      background: linear-gradient(#ffffff, #e8f5e9);
+    }
+    .stack-layer {
+      background: rgba(46,125,50,0.08);
+      padding: 25px;
+      margin: 25px 0;
+      border-left: 6px solid #2e7d32;
+      border-radius: 12px;
+    }
+
+    /* ===== CTA ===== */
+    .cta {
+      text-align: center;
+      padding: 80px;
+      background: #2e7d32;
+      color: white;
+    }
+    .cta button {
+      padding: 15px 40px;
+      border-radius: 30px;
+      border: none;
+      background: white;
+      color: #2e7d32;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    /* ===== FEATURE HERO VIDEO ===== */
+.feature-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: white;
+  overflow: hidden;
+}
+
+.feature-hero video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.feature-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(0,0,0,0.6),
+    rgba(0,0,0,0.35),
+    rgba(0,0,0,0.7)
+  );
+  z-index: -1;
+}
+
+.feature-hero h1 {
+  font-size: 4rem;
+  font-weight: 800;
+}
+
+.feature-hero p {
+  max-width: 720px;
+  font-size: 1.3rem;
+  margin-top: 10px;
+}
+
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" style="background-color:rgb(0, 130, 0);">
+  <div class="logo" style="font-size: 30px;">🌾 Agro AI</div>
+  <div style="color:#e9f6ef">
+    <a href="/index" style="color: #e8f5e9;font-size: 30px;">Home</a>
+    <a href="/feature" style="color: #e8f5e9;font-size: 30px;">Features</a>
+    <a href="#" style="color: #e8f5e9;font-size: 30px;">Demo</a>
+    <a href="/login" style="color: #e8f5e9;font-size: 30px;">Login</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="feature-hero">
+  
+  <!-- 🎥 Background Video -->
+  <video autoplay muted loop playsinline>
+    <source src="Agro.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- 🌾 Hero Content -->
+  <div>
+    <h1 data-aos="zoom-in">Agro AI Technology</h1>
+    <p data-aos="fade-up">
+      A complete AI-powered ecosystem transforming agriculture from soil to sale.
+    </p>
+  </div>
+
+</section>
+
+
+<!-- PIPELINE -->
+<section class="pipeline">
+  <h2 data-aos="fade-right" style="font-size: 50px; font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;">How Agro AI Works</h2>
+
+  <div class="pipeline-step" data-aos="fade-right" style="background-color: #e9f6ef; border-radius: 12px; padding: 20px;">
+    <span>🌱</span>
+    <div>
+      <h3>Data Collection</h3>
+      <p>SoilGrid, Weather APIs, satellite imagery & farmer input</p>
+    </div>
+  </div>
+
+  <div class="pipeline-step" data-aos="fade-left" style="background-color: #e9f6ef; border-radius: 12px; padding: 20px;">
+    <span>🧠</span>
+    <div>
+      <h3>AI Intelligence</h3>
+      <p>Crop prediction, disease detection, yield estimation</p>
+    </div>
+  </div>
+
+  <div class="pipeline-step" data-aos="fade-right" style="background-color: #e9f6ef; border-radius: 12px; padding: 20px;">
+    <span>📊</span>
+    <div>
+      <h3>Analytics Engine</h3>
+      <p>Risk analysis, alerts, optimization strategies</p>
+    </div>
+  </div>
+
+  <div class="pipeline-step" data-aos="fade-left" style="background-color: #e9f6ef; border-radius: 12px; padding: 20px;">
+    <span>📱</span>
+    <div>
+      <h3>Farmer Dashboard</h3>
+      <p>Simple, visual, multilingual UI with chatbot support</p>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features">
+  <h2 data-aos="fade-up">Core Features</h2>
+  <div class="grid">
+    <div class="card" data-aos="flip-left">
+      🌾<h3>Crop Recommendation</h3>
+      <p>AI-based crop selection using soil & climate data</p>
+    </div>
+    <div class="card" data-aos="flip-right">
+      🦠<h3>Disease Detection</h3>
+      <p>Deep learning leaf image classification</p>
+    </div>
+    <div class="card" data-aos="flip-left">
+      🌦<h3>Weather Intelligence</h3>
+      <p>Hyper-local weather forecasts & alerts</p>
+    </div>
+    <div class="card" data-aos="flip-right">
+      📈<h3>Mandi Price Analysis</h3>
+      <p>Live prices & trend predictions</p>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="stack">
+  <h2 data-aos="zoom-in">Technology Stack</h2>
+
+  <div class="stack-layer" data-aos="fade-up">
+    <strong>Frontend</strong>
+    <p>HTML, CSS, JavaScript, Charts, Maps</p>
+  </div>
+
+  <div class="stack-layer" data-aos="fade-up" data-aos-delay="100">
+    <strong>Backend</strong>
+    <p>Flask, REST APIs, Authentication</p>
+  </div>
+
+  <div class="stack-layer" data-aos="fade-up" data-aos-delay="200">
+    <strong>AI / ML</strong>
+    <p>PyTorch, CNNs, Crop Prediction Models</p>
+  </div>
+
+  <div class="stack-layer" data-aos="fade-up" data-aos-delay="300">
+    <strong>Data Sources</strong>
+    <p>SoilGrid, Weather APIs, Satellite & Market Data</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2 data-aos="fade-up">Agro AI is not just a platform — it’s intelligence for farmers</h2>
+  <button data-aos="zoom-in">Explore Dashboard</button>
+</section>
+
+<!-- AOS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+<script>
+  AOS.init({ duration: 1000, once: true });
+</script>
+
+</body>
+</html>

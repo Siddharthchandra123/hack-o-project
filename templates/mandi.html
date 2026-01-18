@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Live Mandi Price Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      margin: 0;
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #f4f6f9;
+    }
+
+    header {
+      background: #1f2937;
+      color: #fff;
+      padding: 16px 24px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+  .container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: auto;
+}
+
+    .grid {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+
+    h3 {
+      margin-top: 0;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    select, input, button {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1e40af;
+    }
+
+    .top-mover {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .up { color: green; }
+    .down { color: red; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+
+    th {
+      background: #f3f4f6;
+    }
+
+    canvas {
+      max-height: 300px;
+    }
+
+    @media(max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    /* ================= 
+    BAR ================= */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: #111827;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.brand {
+  font-weight: 600;
+  font-size: 18px;
+  margin-left: 6px;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  font-size: 18px;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  color: #d1d5db;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 6px 4px;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+  color: #fff;
+  border-bottom: 2px solid #22c55e;
+}
+
+.nav-right {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+}
+
+  </style>
+</head>
+
+<body>
+
+<nav class="navbar">
+  <div class="nav-left">
+    🌾 <span class="brand">AgroMandi</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="/mandi">Dashboard</a></li>
+    <li><a href="/crop-disease">Crop disease</a></li>
+    <li><a href="/fertilizer">Crop prediction</a></li>
+    <li><a href="/weather">Weather</a></li>
+  </ul>
+  <div class="nav-right">
+    <small id="lastUpdated"></small>
+  </div>
+</nav>
+
+
+<div class="container">
+  <div class="grid">
+
+    <!-- LEFT PANEL -->
+    <div class="card">
+      <h3>Filters</h3>
+
+      <select id="stateFilter" title="state"></select>
+      <select id="commodityFilter" title="Com"></select>
+      <input type="text" id="searchInput" placeholder="Search mandi">
+
+      <button onclick="exportCSV()">Export CSV</button>
+
+      <hr>
+
+      <h3>🔥 Top Movers</h3>
+      <div id="topMovers"></div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div>
+
+      <div class="card">
+        <h3>📈 Price Trend</h3>
+        <canvas id="trendChart"></canvas>
+      </div>
+
+      <br>
+
+      <div class="card">
+        <h3>📊 Commodity Average Prices</h3>
+        <canvas id="barChart"></canvas>
+      </div>
+
+      <br>
+
+      <div class="card">
+        <h3>📋 Market Prices</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>State</th>
+              <th>Mandi</th>
+              <th>Commodity</th>
+              <th>Price (₹)</th>
+              <th>7d Avg</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+<script>
+  /* =====================================================
+   GLOBAL STATE
+===================================================== */
+let mandiData = null;
+let trendChart = null;
+let barChart = null;
+
+/* =====================================================
+   DOM ELEMENTS
+===================================================== */
+const stateFilter = document.getElementById("stateFilter");
+const commodityFilter = document.getElementById("commodityFilter");
+const tableBody = document.getElementById("tableBody");
+const topMoversDiv = document.getElementById("topMovers");
+const lastUpdatedEl = document.getElementById("lastUpdated");
+
+/* =====================================================
+   FETCH DATA FROM FLASK API
+===================================================== */
+async function fetchFromAPI() {
+  try {
+    const state =
+      stateFilter.value && stateFilter.value !== "All"
+        ? stateFilter.value
+        : "";
+
+    const commodity =
+      commodityFilter.value && commodityFilter.value !== "All"
+        ? commodityFilter.value
+        : "";
+
+    const response = await fetch(`http://127.0.0.1:5000/api/mandi-prices?state=${state}&commodity=${commodity}`)
+
+    if (!response.ok) {
+      throw new Error("API response not OK");
+    }
+
+    mandiData = await response.json();
+
+    if (!mandiData || !Array.isArray(mandiData.markets)) {
+      throw new Error("Invalid API data");
+    }
+
+    initFilters();
+    updateDashboard();
+    renderTopMovers();
+
+    lastUpdatedEl.innerText =
+      "Last updated: " +
+      (mandiData.lastUpdated
+        ? new Date(mandiData.lastUpdated).toLocaleString()
+        : new Date().toLocaleString());
+
+  } catch (err) {
+    console.error("Dashboard error:", err);
+  }
+}
+
+/* =====================================================
+   FILTER DROPDOWNS
+===================================================== */
+function initFilters() {
+  const states = ["All", ...new Set(mandiData.markets.map(m => m.state))];
+  const commodities = ["All", ...new Set(mandiData.markets.map(m => m.commodity))];
+
+  stateFilter.innerHTML = states.map(s => `<option>${s}</option>`).join("");
+  commodityFilter.innerHTML = commodities.map(c => `<option>${c}</option>`).join("");
+}
+
+/* =====================================================
+   FILTER DATA
+===================================================== */
+function getFilteredData() {
+  const state = stateFilter.value;
+  const commodity = commodityFilter.value;
+  const search = document.getElementById("searchInput").value.toLowerCase();
+
+  return mandiData.markets.filter(m =>
+    (state === "All" || m.state === state) &&
+    (commodity === "All" || m.commodity === commodity) &&
+    m.mandi.toLowerCase().includes(search)
+  );
+}
+
+/* =====================================================
+   TABLE
+===================================================== */
+function renderTable(data) {
+  tableBody.innerHTML = data
+    .map(
+      m => `
+      <tr>
+        <td>${m.state}</td>
+        <td>${m.mandi}</td>
+        <td>${m.commodity}</td>
+        <td>₹${m.price}</td>
+        <td>${m.avg7d}</td>
+      </tr>`
+    )
+    .join("");
+}
+
+/* =====================================================
+   TOP MOVERS
+===================================================== */
+function renderTopMovers() {
+  const movers = [...mandiData.markets]
+    .map(m => ({ ...m, diff: m.price - m.avg7d }))
+    .sort((a, b) => Math.abs(b.diff) - Math.abs(a.diff))
+    .slice(0, 5);
+
+  topMoversDiv.innerHTML = movers
+    .map(
+      m => `
+      <div class="top-mover">
+        <span>${m.mandi} (${m.commodity})</span>
+        <span class="${m.diff >= 0 ? "up" : "down"}">
+          ${m.diff >= 0 ? "+" : ""}${m.diff}
+        </span>
+      </div>`
+    )
+    .join("");
+}
+
+/* =====================================================
+   CHARTS
+===================================================== */
+function renderCharts(filteredData) {
+  if (!mandiData || !mandiData.markets.length) return;
+
+  if (trendChart) trendChart.destroy();
+  if (barChart) barChart.destroy();
+
+  /* =========================================
+     PIE CHART → ALL CROPS IN STATE
+  ========================================== */
+
+  const stateData = getStateMandiData();
+
+  const pieAgg = {};
+  stateData.forEach(m => {
+    pieAgg[m.commodity] = pieAgg[m.commodity] || [];
+    pieAgg[m.commodity].push(m.price);
+  });
+
+  const pieLabels = Object.keys(pieAgg);
+  const pieValues = pieLabels.map(
+    k => Math.round(pieAgg[k].reduce((a,b)=>a+b) / pieAgg[k].length)
+  );
+
+  trendChart = new Chart(
+    document.getElementById("trendChart"),
+    {
+      type: "pie",
+      data: {
+        labels: pieLabels,
+        datasets: [{
+          data: pieValues
+        }]
+      },
+      options: {
+        plugins: {
+          legend: { position: "right" },
+          title: {
+            display: true,
+            text: `All Crop Prices in ${stateFilter.value} Mandis`
+          }
+        }
+      }
+    }
+  );
+
+  /* =========================================
+     BAR CHART → STATE + CROP FILTER
+  ========================================== */
+
+  if (!filteredData.length) return;
+
+  const barAgg = {};
+  filteredData.forEach(m => {
+    barAgg[m.commodity] = barAgg[m.commodity] || [];
+    barAgg[m.commodity].push(m.price);
+  });
+
+  const barLabels = Object.keys(barAgg);
+  const barValues = barLabels.map(
+    k => Math.round(barAgg[k].reduce((a,b)=>a+b) / barAgg[k].length)
+  );
+
+  barChart = new Chart(
+    document.getElementById("barChart"),
+    {
+      type: "bar",
+      data: {
+        labels: barLabels,
+        datasets: [{
+          label: "Average Price ₹",
+          data: barValues
+        }]
+      }
+    }
+  );
+}
+
+
+/* =====================================================
+   DASHBOARD UPDATE
+===================================================== */
+function updateDashboard() {
+  const filtered = getFilteredData();
+  renderTable(filtered);
+  renderCharts(filtered);
+}
+
+/* =====================================================
+   CSV EXPORT
+===================================================== */
+function exportCSV() {
+  const rows = getFilteredData();
+  let csv = "State,Mandi,Commodity,Price,7d Avg\n";
+
+  rows.forEach(r => {
+    csv += `${r.state},${r.mandi},${r.commodity},${r.price},${r.avg7d}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "mandi_prices.csv";
+  link.click();
+}
+
+/* =====================================================
+   EVENT LISTENERS
+===================================================== */
+stateFilter.onchange = fetchFromAPI;
+commodityFilter.onchange = fetchFromAPI;
+document.getElementById("searchInput").oninput = updateDashboard;
+
+/* =====================================================
+   INITIAL LOAD
+===================================================== */
+window.onload = () => {
+  fetchFromAPI();
+  setInterval(fetchFromAPI, 30000);
+};
+function getStateMandiData() {
+  const state = stateFilter.value;
+
+  if (!state || state === "All") {
+    return mandiData.markets; // all states
+  }
+
+  return mandiData.markets.filter(m => m.state === state);
+}
+</script>
+</html>

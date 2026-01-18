@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>India Soil Map</title>
+<link rel="stylesheet" href="soil.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<div class="tooltip" id="tooltip"></div>
+
+<h2>Click on an Indian State</h2>
+
+<div class="container">
+
+<!-- FULL INDIA SVG -->
+<svg id="india-map" viewBox="0 0 1000 1200">
+
+  <!-- NORTH -->
+  <path id="JK" title="Jammu and Kashmir"
+    d="M330 80 L410 70 L450 120 L390 160 L330 130 Z" class="state"/>
+  <path id="HP" title="Himachal Pradesh"
+    d="M410 160 L460 160 L470 200 L420 210 Z" class="state"/>
+  <path id="PB" title="Punjab"
+    d="M350 190 L390 190 L390 240 L350 240 Z" class="state"/>
+  <path id="HR" title="Haryana"
+    d="M390 230 L430 230 L430 270 L390 270 Z" class="state"/>
+  <path id="DL" title="Delhi"
+    d="M430 250 L440 250 L440 260 L430 260 Z" class="state"/>
+
+  <!-- WEST -->
+  <path id="RJ" title="Rajasthan"
+    d="M280 250 L390 250 L380 390 L260 380 Z" class="state"/>
+  <path id="GJ" title="Gujarat"
+    d="M230 400 L330 400 L340 520 L250 530 Z" class="state"/>
+
+  <!-- CENTRAL -->
+  <path id="MP" title="Madhya Pradesh"
+    d="M380 390 L540 390 L560 510 L410 520 Z" class="state"/>
+  <path id="CG" title="Chhattisgarh"
+    d="M560 430 L640 430 L650 510 L580 520 Z" class="state"/>
+
+  <!-- EAST -->
+  <path id="BR" title="Bihar"
+    d="M580 320 L670 320 L670 360 L580 360 Z" class="state"/>
+  <path id="JH" title="Jharkhand"
+    d="M580 360 L670 360 L660 410 L580 410 Z" class="state"/>
+  <path id="WB" title="West Bengal"
+    d="M670 350 L720 350 L710 450 L670 460 Z" class="state"/>
+  <path id="OD" title="Odisha"
+    d="M620 420 L720 420 L710 510 L620 520 Z" class="state"/>
+
+  <!-- NORTH EAST -->
+  <path id="AS" title="Assam"
+    d="M740 330 L850 330 L860 360 L750 370 Z" class="state"/>
+  <path id="AR" title="Arunachal Pradesh"
+    d="M760 290 L870 280 L900 310 L780 320 Z" class="state"/>
+  <path id="ML" title="Meghalaya"
+    d="M750 380 L820 380 L820 410 L750 410 Z" class="state"/>
+  <path id="MN" title="Manipur"
+    d="M850 380 L870 380 L870 430 L850 430 Z" class="state"/>
+  <path id="MZ" title="Mizoram"
+    d="M830 430 L860 430 L860 480 L830 480 Z" class="state"/>
+  <path id="NL" title="Nagaland"
+    d="M870 350 L900 350 L900 390 L870 390 Z" class="state"/>
+  <path id="TR" title="Tripura"
+    d="M800 430 L820 430 L820 470 L800 470 Z" class="state"/>
+
+  <!-- SOUTH -->
+  <path id="MH" title="Maharashtra"
+    d="M350 520 L540 520 L560 650 L370 660 Z" class="state"/>
+  <path id="TS" title="Telangana"
+    d="M500 650 L570 650 L580 710 L510 710 Z" class="state"/>
+  <path id="AP" title="Andhra Pradesh"
+    d="M540 710 L650 720 L630 820 L520 800 Z" class="state"/>
+  <path id="KA" title="Karnataka"
+    d="M350 660 L450 660 L460 780 L360 780 Z" class="state"/>
+  <path id="TN" title="Tamil Nadu"
+    d="M430 800 L530 820 L500 900 L420 890 Z" class="state"/>
+  <path id="KL" title="Kerala"
+    d="M360 780 L400 800 L380 900 L350 880 Z" class="state"/>
+  <path id="GA" title="Goa"
+    d="M360 630 L380 630 L380 650 L360 650 Z" class="state"/>
+
+</svg>
+
+<div id="infoBox">
+  <span id="closeBtn">✖</span>
+  <h3 id="stateName">State</h3>
+  <p><b>Soil Type:</b> <span id="soil"></span></p>
+  <p><b>Region:</b> <span id="region"></span></p>
+
+  <div class="legend">
+    <div><span style="background:#f59e0b"></span>Alluvial</div>
+    <div><span style="background:#1d4ed8"></span>Black Soil</div>
+    <div><span style="background:#16a34a"></span>Red Soil</div>
+    <div><span style="background:#a16207"></span>Desert Soil</div>
+  </div>
+</div>
+
+
+</div>
+
+<script src="soil.js"></script>
+</body>
+</html>

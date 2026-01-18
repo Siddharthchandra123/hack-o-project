@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>AgroAI – Crop Rotation Advisor</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<header>
+    <h1>🌱 AgroAI Crop Rotation Advisor</h1>
+    <p>AI-based smart crop planning</p>
+</header>
+
+<main>
+    <section class="card">
+        <h2>Select Land</h2>
+        <input type="number" id="landId" placeholder="Enter Land ID" />
+        <button onclick="getRecommendations()">Get Recommendations</button>
+    </section>
+
+    <section class="card">
+        <h2>AI Recommendations</h2>
+        <div id="results">
+            <p class="muted">No data yet</p>
+        </div>
+    </section>
+    <div id="map" style="height: 500px;"></div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="map.js"></script>
+
+</main>
+
+<footer>
+    <p>© AgroAI | Smart Farming Platform</p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>

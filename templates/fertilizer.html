@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AgroAI | Crop Recommendation</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link  rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  /* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", sans-serif;
+}
+body {
+  padding-bottom: 500px; /* prevents overlap with chatbot */
+  background-color: #27ae60;
+}
+
+/* Background video */
+#bg-video {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    z-index: -2;
+}
+
+/* Dark overlay */
+.overlay {
+    min-height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    text-align: center;
+    padding-bottom: 40px;
+}
+
+/* Header */
+header {
+    padding: 30px;
+    color: #e8ffe8;
+}
+
+header h1 {
+    font-size: 3rem;
+}
+
+header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Navigation */
+nav {
+    margin: 20px;
+}
+
+#button {
+    padding: 12px 30px;
+    margin: 5px;
+    border: none;
+    border-radius: 30px;
+    background: linear-gradient(135deg, #4caf50, #2e7d32);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+#button:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #66bb6a, #388e3c);
+}
+
+/* Glass card */
+.card {
+    width: 320px;
+    margin: 30px auto;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    color: white;
+}
+
+.card h2 {
+    margin-bottom: 15px;
+}
+
+/* Inputs */
+.card input {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+/* Buttons */
+.card button {
+    margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    border-radius: 20px;
+    background: #2e7d32;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card button:hover {
+    background: #43a047;
+}
+
+/* Results */
+.card p {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    color: #e0e0e0;
+    font-size: 14px;
+}
+
+/* Utility */
+.hidden {
+    display: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 2.2rem;
+    }
+}
+.preview {
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.4);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Smooth appearance */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+#fertilizerResult {
+    color: #ffeb3b;   /* bright yellow */
+    font-size: 18px;
+    margin-top: 15px;
+}
+#map {
+    height: 300px;
+    width: 100%;
+    margin-top: 15px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+.bubble-bot {
+  position: fixed;              /* 🔒 stays fixed */
+  bottom: 20px;                 /* distance from bottom */
+  right: 20px;                  /* distance from right */
+  width: 360px;
+  max-height: 420px;
+  overflow-y: auto;             /* internal scroll */
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 15px;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+  z-index: 9999;                /* stays on top */
+}
+
+#chatContent {
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+.bot-header {
+  background: #2ecc71;
+  color: white;
+  padding: 12px;
+  border-radius: 14px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.bot-header span {
+  display: block;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.bot-message {
+  margin: 15px 0;
+  background: #e8f5e9;
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 14px;
+}
+
+/* Bubble area */
+.bubble-area {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Bubble */
+.bubble {
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at 30% 30%, #a8ff78, #2ecc71);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: #004d1a;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: inset -5px -5px 15px rgba(0,0,0,0.15),
+              0 10px 20px rgba(0,0,0,0.25);
+  transition: transform 0.2s;
+}
+
+.bubble:hover {
+  transform: scale(1.05);
+}
+
+/* Pop animation */
+.pop {
+  animation: pop 0.4s forwards;
+}
+
+@keyframes pop {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(0); opacity: 0; }
+}
+.input-bubble {
+  display: flex;
+  gap: 8px;
+  margin: 10px;
+}
+
+.input-bubble input {
+  flex: 1;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.input-bubble button {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: none;
+  background: #2ecc71;
+  color: white;
+  cursor: pointer;
+}
+.status-bubble {
+  margin: 10px auto;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #74ebd5, #9face6);
+  color: #003;
+  border-radius: 20px;
+  font-size: 13px;
+  animation: float 1.8s infinite ease-in-out;
+  width: fit-content;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+.weather-card {
+  margin: 12px auto;
+  padding: 14px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 18px;
+  width: 85%;
+  box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+  text-align: center;
+}
+
+.wc-temp {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.wc-cond {
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.wc-row {
+  font-size: 13px;
+  margin-top: 4px;
+}
+/* Typing indicator */
+.typing {
+  font-style: italic;
+  opacity: 0.7;
+  animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 0.4; }
+  50% { opacity: 1; }
+  100% { opacity: 0.4; }
+}
+
+/* Message entry animation */
+.bot-message,
+.user-message {
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.user-message {
+  margin: 12px 0;
+  background: #d1f2eb;
+  padding: 10px 14px;
+  border-radius: 14px;
+  align-self: flex-end;
+  font-size: 14px;
+}
+/* ---------- Animation ---------- */
+.state {
+  transition: fill 0.3s ease, transform 0.2s ease;
+}
+
+.state:hover {
+  transform: scale(1.02);
+}
+
+/* ---------- Active State ---------- */
+.state.active {
+  fill: #facc15 !important;
+  stroke: #fde047;
+  stroke-width: 3;
+}
+
+/* ---------- Tooltip ---------- */
+.tooltip {
+  position: absolute;
+  background: #020617;
+  border: 1px solid #334155;
+  padding: 6px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  pointer-events: none;
+  display: none;
+  color: #e5e7eb;
+  z-index: 10;
+}
+
+/* ---------- Info Box Enhancements ---------- */
+#infoBox {
+  animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ---------- Close Button ---------- */
+#closeBtn {
+  cursor: pointer;
+  float: right;
+  font-size: 14px;
+  color: #f87171;
+}
+
+/* ---------- Legend ---------- */
+.legend {
+  margin-top: 15px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.legend div {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.legend span {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  margin-right: 8px;
+  border-radius: 3px;
+}
+/* 🤖 Floating AI Button */
+#aiBotBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  color: white;
+  font-size: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  z-index: 9999;
+}
+
+/* Chatbot popup */
+#aiBot {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  z-index: 9999;
+}
+
+/* Animation only when visible */
+#aiBot:not(.hidden) {
+  animation: popUp 0.3s ease;
+}
+
+/* Close button */
+.close-bot {
+  position: absolute;
+  right: 12px;
+  top: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  opacity: 0.8;
+}
+
+.close-bot:hover {
+  opacity: 1;
+}
+
+/* Pop animation */
+@keyframes popUp {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.hidden {
+  display: none !important;
+}
+
+</style>
+</head>
+<body>
+
+
+<video autoplay muted loop id="bg-video">
+    <source src="nature1.mp4" type="video/mp4">
+</video>
+
+<div class="overlay">
+
+<header>
+    <h1>🌾 AgroAI</h1>
+    <p>Crop Recommendation System</p>
+</header>
+
+<nav>
+    <a href="/Crop_Disease" id="button">Disease</a>
+    <a href="/fertilizer" id="button" class="active">Crop Recommend</a>
+    <a href="/weather" id="button">Weather</a>
+    <a href="/mandi" id="button">Mandi Prices</a>
+</nav>
+
+<section class="card">
+    <h2>Enter Soil & Crop Details</h2>
+
+    <input type="number" id="nitrogen" placeholder="Nitrogen (N)">
+    <input type="number" id="phosphorus" placeholder="Phosphorus (P)">
+    <input type="number" id="potassium" placeholder="Potassium (K)">
+    <input type="text" id="city" placeholder="City / Location">
+    <div id="map"></div>
+
+
+    <button onclick="predictFertilizer()">Recommend Crop</button>
+
+    <p id="fertilizerResult"></p>
+</section>
+<div id="aiBotBtn" onclick="toggleBot()">🤖</div>
+
+<!-- 🤖 Chatbot Popup -->
+<div class="bubble-bot hidden" id="aiBot">
+
+  <div class="bot-header">
+    🤖 AgroAI Assistant
+    <span>Tap a bubble to continue</span>
+    <span class="close-bot" onclick="toggleBot()">✖</span>
+  </div>
+
+  <div id="chatContent">
+    <div class="bot-message">
+      Hello 🌱 What can I help you with?
+    </div>
+
+    <div class="bubble-area" id="bubbleArea"></div>
+  </div>
+
+  <button id="backBtn" onclick="resetChat()" style="display:none;">
+    ⬅️ Back / Start Over
+  </button>
+
+</div>
+<footer>© 2026 AgroAI</footer>
+
+</div>
+
+<script>
+  function predictDisease() {
+    const image = document.getElementById("cropImage").files[0];
+    let formData = new FormData();
+    formData.append("image", image);
+
+    fetch("http://127.0.0.1:10000/predict-disease", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("diseaseResult").innerText =
+            "🦠 Disease: " + data.prediction;
+    })
+    .catch(err => {
+        alert("API Error");
+    });
+}
+function previewImage(event) {
+    const preview = document.getElementById("imagePreview");
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function () {
+        preview.src = reader.result;
+        preview.classList.remove("hidden");
+    };
+
+    reader.readAsDataURL(file);
+}
+function predictFertilizer() {
+    if (!window.selectedLat || !window.selectedLon) {
+        document.getElementById("fertilizerResult").innerText =
+            "⚠️ Please select a location on the map";
+        return;
+    }
+
+    fetch("http://127.0.0.1:10000/predict-fertilizer", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            nitrogen: nitrogen.value,
+            phosphorus: phosphorus.value,
+            potassium: potassium.value,
+            lat: window.selectedLat,
+            lon: window.selectedLon
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        document.getElementById("fertilizerResult").innerHTML =
+            `🌱 <b>Recommended:</b> ${data.fertilizer}<br>
+             🌡️ Temp: ${data.weather.temperature} °C<br>
+             💧 Humidity: ${data.weather.humidity}%`;
+    })
+    .catch(() => {
+        document.getElementById("fertilizerResult").innerText =
+            "❌ Prediction failed";
+    });
+}
+
+if (document.getElementById("map")) {
+  let map = L.map('map').setView([20.5937, 78.9629], 5);
+  // rest of Leaflet code
+let marker;
+
+// OpenStreetMap tiles
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap'
+}).addTo(map);
+
+// Click on map to select location
+map.on('click', async function (e) {
+    const { lat, lng } = e.latlng;
+
+    if (marker) {
+        marker.setLatLng([lat, lng]);
+    } else {
+        marker = L.marker([lat, lng]).addTo(map);
+    }
+
+    marker.bindPopup(
+        `📍 Selected Location<br>Lat: ${lat.toFixed(4)}<br>Lon: ${lng.toFixed(4)}`
+    ).openPopup();
+
+    // Save coordinates globally
+    window.selectedLat = lat;
+    window.selectedLon = lng;
+
+    // 🔥 Convert coords → city
+    const cityName = await getCityFromCoords(lat, lng);
+
+    if (cityName) {
+        document.getElementById("city").value = cityName;
+    }
+});
+
+async function getCityFromCoords(lat, lon) {
+    const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    if (data.address) {
+        return (
+            data.address.city ||
+            data.address.town ||
+            data.address.village ||
+            data.address.county ||
+            ""
+        );
+    }
+    return "";
+}
+}
+document.addEventListener("DOMContentLoaded", () => {
+
+  const bubbleArea = document.getElementById("bubbleArea");
+  if (!bubbleArea) return; // prevents crash on other pages
+
+  const mainBubbles = [
+    { text: "🌿 Crop Disease", action: "disease" },
+    { text: "🧪 Fertilizer", action: "fertilizer" },
+    { text: "🌦️ Weather", action: "weather" },
+    { text: "🌾 Farming Tips", action: "tips" }
+  ];
+
+  loadBubbles(mainBubbles);
+
+  function loadBubbles(bubbles) {
+    bubbleArea.innerHTML = "";
+    bubbles.forEach(b => createBubble(b.text, b.action));
+  }
+
+  function createBubble(text, action) {
+    const div = document.createElement("div");
+    div.className = "bubble";
+    div.innerText = text;
+
+    div.onclick = () => popBubble(div, action);
+    bubbleArea.appendChild(div);
+  }
+
+  function popBubble(bubble, action) {
+    bubble.classList.add("pop");
+
+    setTimeout(() => {
+      showNext(action);
+    }, 350);
+  }
+
+function showNext(action) {
+
+  // 🌿 Disease flow
+  if (action === "disease") {
+    loadBubbles([
+      { text: "📸 Upload Leaf Image", action: "upload" },
+      { text: "📖 Disease Info", action: "info" }
+    ]);
+  }
+
+  else if (action === "upload") {
+    addBotMessage("📸 Please upload a clear leaf image.");
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+
+    input.onchange = () => {
+      sendDiseaseImage(input.files[0]);
+    };
+
+    input.click();
+  }
+
+  // 🧪 Fertilizer flow
+  else if (action === "fertilizer") {
+    loadBubbles([
+      { text: "🧪 Enter NPK Values", action: "npk" },
+      { text: "📍 Use Location", action: "location" }
+    ]);
+  }
+
+else if (action === "npk") {
+  addBotMessage("🧪 Enter N, P, K values (e.g. 10,20,30)");
+
+  addInputBubble("N,P,K", (value) => {
+    addUserMessage(value);
+
+    const parts = value.split(",").map(Number);
+    if (parts.length !== 3 || parts.some(isNaN)) {
+      addBotMessage("❌ Invalid format. Please enter like 10,20,30");
+      return;
+    }
+
+    const [N, P, K] = parts;
+
+    addBotMessage("🌾 Processing fertilizer recommendation...");
+    sendFertilizer(N, P, K, window.selectedLat, window.selectedLon);
+  });
+}
+    else if (action === "location") {
+  detectLocation();
+}
+
+
+  // 🌦️ Weather flow
+else if (action === "weather") {
+  const status = showStatusBubble("📍 Detecting your location...");
+
+  detectLocation(async (lat, lon, city) => {
+    status.innerText = `📍 ${city} detected`;
+
+    setTimeout(async () => {
+      status.innerText = "☁️ Fetching live weather...";
+
+      const weather = await getWeatherByCoords(lat, lon);
+      status.remove();
+
+      showWeatherResult(weather);
+    }, 1200);
+  });
+}
+
+
+  // 🔁 Back to main
+  else {
+    loadBubbles(mainBubbles);
+  }
+}
+
+
+});
+function addBotMessage(text) {
+  const msg = document.createElement("div");
+  msg.className = "bot-message";
+  msg.innerHTML = text;
+  document.querySelector(".bubble-bot").appendChild(msg);
+}
+
+function addUserMessage(text) {
+  const msg = document.createElement("div");
+  msg.className = "user-message";
+  msg.innerText = text;
+  document.querySelector(".bubble-bot").appendChild(msg);
+}
+
+async function sendDiseaseImage(file) {
+  showTypingBubble();
+setTimeout(() => {
+  removeTypingBubble();
+  addBotMessage("🔍 Analyzing leaf image...");
+}, 800);
+
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const res = await fetch("http://127.0.0.1:10000/predict-disease", {
+    method: "POST",
+    body: formData
+  });
+
+  const data = await res.json();
+
+  if (data.prediction) {
+    addBotMessage(
+  `🌿 <b>Disease:</b> ${data.prediction}\n` +
+  `📊 <b>Confidence:</b> ${Math.round(data.confidence * 100)}%`
+);
+
+  } else {
+    addBotMessage("❌ Unable to analyze image.");
+  }
+  document.getElementById("backBtn").style.display = "block";
+
+}
+async function sendFertilizer(N, P, K, lat, lon) {
+  addBotMessage("🌾 Calculating best fertilizer...");
+
+  const res = await fetch("http://127.0.0.1:10000/predict-fertilizer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      nitrogen: N,
+      phosphorus: P,
+      potassium: K,
+      lat: lat,
+      lon: lon
+    })
+  });
+
+  const data = await res.json();
+
+  if (data.fertilizer) {
+    addBotMessage(
+      `🧪 Recommended Crop/Fertilizer: ${data.fertilizer}\n` +
+      `🌡️ Temp: ${data.weather.temperature}°C\n` +
+      `💧 Humidity: ${data.weather.humidity}%`
+    );
+
+    if (data.alerts && data.alerts.length) {
+      data.alerts.forEach(a => addBotMessage(a));
+    }
+  } else {
+    addBotMessage("❌ Could not generate recommendation.");
+  }
+  document.getElementById("backBtn").style.display = "block";
+
+}
+function addInputBubble(placeholder, onSubmit) {
+  const wrapper = document.createElement("div");
+  wrapper.className = "input-bubble";
+
+  const input = document.createElement("input");
+  input.type = "text";
+  input.placeholder = placeholder;
+
+  const btn = document.createElement("button");
+  btn.innerText = "OK";
+
+  btn.onclick = () => {
+    if (!input.value.trim()) return;
+    wrapper.remove();
+    onSubmit(input.value.trim());
+  };
+
+  wrapper.appendChild(input);
+  wrapper.appendChild(btn);
+
+  document.querySelector(".bubble-bot").appendChild(wrapper);
+}
+
+function detectLocation(callback) {
+  if (!navigator.geolocation) {
+    addBotMessage("❌ Geolocation not supported.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      window.selectedLat = lat;
+      window.selectedLon = lon;
+
+      const city = await reverseGeocode(lat, lon);
+
+      if (callback) callback(lat, lon, city);
+    },
+    () => addBotMessage("❌ Location access denied.")
+  );
+}
+
+async function reverseGeocode(lat, lon) {
+  try {
+    const res = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`
+    );
+    const data = await res.json();
+
+    return (
+      data.address.city ||
+      data.address.town ||
+      data.address.village ||
+      data.address.county ||
+      ""
+    );
+  } catch {
+    return "";
+  }
+}
+function showStatusBubble(text) {
+  const bubble = document.createElement("div");
+  bubble.className = "status-bubble";
+  bubble.innerText = text;
+
+  document.querySelector(".bubble-bot").appendChild(bubble);
+  return bubble;
+}
+function showWeatherResult(weather) {
+  const card = document.createElement("div");
+  card.className = "weather-card";
+
+  card.innerHTML = `
+    <div class="wc-temp">🌡️ ${weather.temp}°C</div>
+    <div class="wc-cond">${weather.condition}</div>
+    <div class="wc-row">
+      💧 Humidity: ${weather.humidity}%
+    </div>
+    <div class="wc-row">
+      🌬️ Wind: ${weather.wind} km/h
+    </div>
+  `;
+
+  document.querySelector(".bubble-bot").appendChild(card);
+
+  showWeatherAdvice(weather);
+  document.getElementById("backBtn").style.display = "block";
+
+}
+function showWeatherAdvice(w) {
+  let advice = "✅ Weather is suitable for farming today.";
+
+  if (w.temp > 35)
+    advice = "🔥 Hot day! Irrigate crops in early morning or evening.";
+  else if (w.humidity > 80)
+    advice = "⚠️ High humidity. Monitor crops for fungal diseases.";
+  else if (w.rain > 5)
+    advice = "🌧️ Rain expected. Avoid spraying fertilizers.";
+
+  addBotMessage("🌾 " + advice);
+}
+async function getWeatherByCoords(lat, lon) {
+  const res = await fetch(
+    `https://api.weatherapi.com/v1/current.json?key=dde2b9fb075e41d4b8082159261401&q=${lat},${lon}&aqi=no`
+  );
+
+  const data = await res.json();
+
+  return {
+    temp: data.current.temp_c,
+    humidity: data.current.humidity,
+    wind: data.current.wind_kph,
+    rain: data.current.precip_mm,
+    condition: data.current.condition.text
+  };
+}
+function showTypingBubble() {
+  const typing = document.createElement("div");
+  typing.className = "bot-message typing";
+  typing.id = "typingBubble";
+  typing.innerText = "AgroAI is typing...";
+  document.querySelector(".bubble-bot").appendChild(typing);
+  scrollChat();
+}
+
+function removeTypingBubble() {
+  const t = document.getElementById("typingBubble");
+  if (t) t.remove();
+}
+function scrollChat() {
+  const chat = document.querySelector(".bubble-bot");
+  chat.scrollTop = chat.scrollHeight;
+}
+function resetChat() {
+  const chat = document.querySelector(".bubble-bot");
+  chat.innerHTML = "";
+
+  addBotMessage(
+    "👋 Welcome back! What would you like help with?\n\n" +
+    "🌿 Disease Detection\n" +
+    "🧪 Fertilizer Recommendation\n" +
+    "🌦️ Weather Alerts"
+  );
+
+  document.getElementById("backBtn").style.display = "none";
+}
+function toggleBot() {
+  const bot = document.getElementById("aiBot");
+  const btn = document.getElementById("aiBotBtn");
+
+  const isHidden = bot.classList.contains("hidden");
+
+  if (isHidden) {
+    bot.classList.remove("hidden");
+    btn.style.display = "none"; // hide button
+  } else {
+    bot.classList.add("hidden");
+    btn.style.display = "flex"; // show button again
+  }
+}
+
+</script>
+</body>
+</html>
